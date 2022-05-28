@@ -23,6 +23,8 @@ int MYmain() {
             genAllPosMov(false);
         }else if(equals(command, "GEN_ALL_POS_MOV_CUT_IF_GAME_OVER")){
 			genAllPosMov(true);
+		}else if(equals(command, "SOLVE_GAME_STATE")){
+			solveGame();
 		}
     }
 

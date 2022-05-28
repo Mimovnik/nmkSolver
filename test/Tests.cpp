@@ -21,6 +21,7 @@ TEST(CompareStrings, StringNotEqual) {
     bool f = equals(charArr1, charArr2);
     ASSERT_FALSE(f);
 }
+TEST(ManualTest, Test1) { MyTest("manual"); }
 
 TEST(STOSTests, Test0) { MyTest("0"); }
 TEST(STOSTests, Test1) { MyTest("1"); }
@@ -47,7 +48,6 @@ TEST(STOSTests, Test21) { MyTest("21"); }
 TEST(STOSTests, Test22) { MyTest("22"); }
 TEST(STOSTests, Test23) { MyTest("23"); }
 
-TEST(ManualTest, Test1) { MyTest("manual"); }
 
 void checkLineEquality(fstream& expected, fstream& actual) {
     string expectedLine, actualLine;

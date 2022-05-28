@@ -4,4 +4,6 @@
 
 void genAllPosMov(bool cut);
 
+void solveGame();
+
 #endif
