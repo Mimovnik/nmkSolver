@@ -47,12 +47,9 @@ TEST(STOSTests, Test21) { MyTest("21"); }
 TEST(STOSTests, Test22) { MyTest("22"); }
 TEST(STOSTests, Test23) { MyTest("23"); }
 
-TEST(ManualTest, Test1){
-    MyTest("manual");
-}
+TEST(ManualTest, Test1) { MyTest("manual"); }
 
-    void
-    checkLineEquality(fstream& expected, fstream& actual) {
+void checkLineEquality(fstream& expected, fstream& actual) {
     string expectedLine, actualLine;
     int line = 0;
     do {
@@ -62,7 +59,7 @@ TEST(ManualTest, Test1){
         ASSERT_EQ(expectedLine, actualLine) << "Output line " << line << "\n";
     } while (!expected.eof() && !actual.eof());
     if (!actual.eof()) {
-        FAIL() << "Too many lines in actual output: " << line << "\n";
+        FAIL() << "Too many lines in actual output, should be: " << line << "\n";
     }
 }
 

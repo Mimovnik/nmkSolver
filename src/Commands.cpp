@@ -2,8 +2,6 @@
 
 #include <iostream>
 
-void minimax() {}
-
 char opponent(char activePlayer) {
     if (activePlayer == '1') {
         return '2';
@@ -84,16 +82,19 @@ void printBoard(int width, int height, char* board) {
         std::cout << std::endl;
     }
 }
+
 int possibleMovesCutIfGameOver(char* board, int width, int height,
-                               int consecutiveToWin, char activePlayer, bool cut) {
+                               int consecutiveToWin, char activePlayer,
+                               bool cut, bool* isWinner) {
     int posMoves = 0;
     for (int i = 0; i < width * height; i++) {
         if (board[i] == '0') {
             posMoves++;
             board[i] = activePlayer;
-            if (cut && won(activePlayer, board, width, height, consecutiveToWin)) {
-                board[i] = '0';
-                break;
+            if (cut &&
+                won(activePlayer, board, width, height, consecutiveToWin)) {
+                *isWinner = true;
+                return 1;
             }
             board[i] = '0';
         }
@@ -118,17 +119,23 @@ void genAllPosMov(bool cut) {
         delete[] board;
         return;
     }
+    bool isWinner = false;
+    std::cout << possibleMovesCutIfGameOver(board, width, height,
+                                            consecutiveToWin, activePlayer, cut,
+                                            &isWinner)
+              << std::endl;
 
-    std::cout << possibleMovesCutIfGameOver(board, width, height, consecutiveToWin, activePlayer, cut) << std::endl;
-    for (int i = 0; i < width * height; i++) {
-        if (board[i] == '0') {
-            board[i] = activePlayer;
-            printBoard(width, height, board);
-            if (cut && won(activePlayer, board, width, height, consecutiveToWin)) {
+    if (isWinner) {
+        printBoard(width, height, board);
+    }else{
+        for (int i = 0; i < width * height; i++) {
+            if (board[i] == '0') {
+                board[i] = activePlayer;
+
+                printBoard(width, height, board);
+
                 board[i] = '0';
-                break;
             }
-            board[i] = '0';
         }
     }
 
