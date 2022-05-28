@@ -21,11 +21,6 @@ int MYmain() {
     char* command = new char[MAX_LINE_LENGTH];
 
     while (std::cin >> command) {
-		if(equals(command, "test")){
-			std::cout << "Test should work." << std::endl;
-		}else if(equals(command, "test2")){
-			std::cout << "zonker\nkebab\nbanana\n";
-		}
         if (equals(command, "GEN_ALL_POS_MOV")) {
             genAllPosMov();
         }

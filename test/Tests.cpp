@@ -8,8 +8,6 @@
 
 using namespace std;
 
-
-
 void MyTest(string number);
 
 TEST(CompareStrings, StringEqual) {
@@ -24,13 +22,30 @@ TEST(CompareStrings, StringNotEqual) {
     ASSERT_FALSE(f);
 }
 
-TEST(CompareFiles, LineEqual) {
-    MyTest("0");
-}
-
-TEST(CompareFiles, MultipleLinesEqual){
-    MyTest("1");
-}
+TEST(STOSTests, Test0) { MyTest("0"); }
+TEST(STOSTests, Test1) { MyTest("1"); }
+TEST(STOSTests, Test2) { MyTest("2"); }
+TEST(STOSTests, Test3) { MyTest("3"); }
+TEST(STOSTests, Test4) { MyTest("4"); }
+TEST(STOSTests, Test5) { MyTest("5"); }
+TEST(STOSTests, Test6) { MyTest("6"); }
+TEST(STOSTests, Test7) { MyTest("7"); }
+TEST(STOSTests, Test8) { MyTest("8"); }
+TEST(STOSTests, Test9) { MyTest("9"); }
+TEST(STOSTests, Test10) { MyTest("10"); }
+TEST(STOSTests, Test11) { MyTest("11"); }
+TEST(STOSTests, Test12) { MyTest("12"); }
+TEST(STOSTests, Test13) { MyTest("13"); }
+TEST(STOSTests, Test14) { MyTest("14"); }
+TEST(STOSTests, Test15) { MyTest("15"); }
+TEST(STOSTests, Test16) { MyTest("16"); }
+TEST(STOSTests, Test17) { MyTest("17"); }
+TEST(STOSTests, Test18) { MyTest("18"); }
+TEST(STOSTests, Test19) { MyTest("19"); }
+TEST(STOSTests, Test20) { MyTest("20"); }
+TEST(STOSTests, Test21) { MyTest("21"); }
+TEST(STOSTests, Test22) { MyTest("22"); }
+TEST(STOSTests, Test23) { MyTest("23"); }
 
 void checkLineEquality(fstream& expected, fstream& actual) {
     string expectedLine, actualLine;
@@ -79,7 +94,6 @@ void testPaths(string inputPath, string actualPath, string expectedPath) {
 }
 
 void MyTest(string number) {
-    testPaths("input/input-" + number + ".txt",
-              "actual/actual-" + number + ".txt",
-              "expected/expected-" + number + ".txt");
+    testPaths("input/" + number + ".in", "actual/actual-" + number + ".txt",
+              "expected/" + number + ".out");
 }
