@@ -1,20 +1,15 @@
 #include "main.h"
 
 #include <iostream>
-#include <string>
+#include <string.h>
 
 #include "Commands.h"
 
 bool equals(const char* str1, const char* str2) {
-	for (int i = 0; i < MAX_LINE_LENGTH; i++) {
-		if (str1[i] != str2[i]) {
-			return false;
-		}
-		else if (str1[i] == '\0' || str2[i] == '\0') {
-			return true;
-		}
+	if(strcmp(str1, str2) == 0){
+		return true;
 	}
-	return true;
+	return false;
 }
 
 int MYmain() {
