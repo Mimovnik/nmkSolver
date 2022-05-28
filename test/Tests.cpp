@@ -47,7 +47,12 @@ TEST(STOSTests, Test21) { MyTest("21"); }
 TEST(STOSTests, Test22) { MyTest("22"); }
 TEST(STOSTests, Test23) { MyTest("23"); }
 
-void checkLineEquality(fstream& expected, fstream& actual) {
+TEST(ManualTest, Test1){
+    MyTest("manual");
+}
+
+    void
+    checkLineEquality(fstream& expected, fstream& actual) {
     string expectedLine, actualLine;
     int line = 0;
     do {
