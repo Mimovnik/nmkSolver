@@ -67,10 +67,6 @@ TEST(ManualTest, Test1){
 }
 
 char* fullPath(string fileName) {
-    // char* charName = new char[fileName.length()];
-    // strcpy(charName, fileName.c_str());
-    // return charName;
-
     int defaultDirectoryLength = 39;
     int fullPathLength = defaultDirectoryLength + fileName.length();
     char* fullPath = new char[fullPathLength];

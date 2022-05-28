@@ -2,6 +2,6 @@
 #define COMMANDS_H
 
 
-void genAllPosMov();
+void genAllPosMov(bool cut);
 
 #endif
