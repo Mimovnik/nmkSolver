@@ -168,7 +168,7 @@ void genAllPosMov(bool cut) {
 }
 
 int minimax(char* board, int width, int height, int consecutiveToWin, int depth,
-            bool isMaximizing) {
+            int alpha, int beta, bool isMaximizing) {
     int* result = getScore(board, width, height, consecutiveToWin);
     if (result != nullptr) {
         int score = *result;
@@ -181,9 +181,13 @@ int minimax(char* board, int width, int height, int consecutiveToWin, int depth,
             if (board[i] == EMPTY_CELL) {
                 board[i] = PLAYER2;
                 int score = minimax(board, width, height, consecutiveToWin,
-                                    depth + 1, false);
+                                    depth + 1, alpha, beta, false);
                 board[i] = EMPTY_CELL;
                 bestScore = std::max(score, bestScore);
+                alpha = std::max(alpha, score);
+                if (beta <= alpha) {
+                    break;
+                }
             }
         }
         return bestScore;
@@ -193,9 +197,13 @@ int minimax(char* board, int width, int height, int consecutiveToWin, int depth,
             if (board[i] == EMPTY_CELL) {
                 board[i] = PLAYER1;
                 int score = minimax(board, width, height, consecutiveToWin,
-                                    depth + 1, true);
+                                    depth + 1, alpha, beta, true);
                 board[i] = EMPTY_CELL;
                 bestScore = std::min(score, bestScore);
+                beta = std::min(beta, score);
+                if (beta <= alpha) {
+                    break;
+                }
             }
         }
         return bestScore;
@@ -217,8 +225,8 @@ void solveGame() {
         std::cin >> board[i];
     }
 
-    int score =
-        minimax(board, width, height, consecutiveToWin, 0, isMaximizing);
+    int score = minimax(board, width, height, consecutiveToWin, 0, -100, 100,
+                        isMaximizing);
     switch (score) {
         case 0:
             std::cout << "BOTH_PLAYERS_TIE" << std::endl;
@@ -230,7 +238,7 @@ void solveGame() {
             std::cout << "SECOND_PLAYER_WINS" << std::endl;
             break;
         default:
-            std::cerr << "THERE IS NO SUCH SCORE!" << std::endl;
+            throw "There is no such score! minimax() has a bug";
     }
 
     // for (int i = 0; i < width * height; i++) {
