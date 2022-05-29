@@ -77,9 +77,9 @@ bool won(char player, char* board, int width, int height,
 
 int* getScore(char* board, int width, int height, int consecutiveToWin) {
     if (won('1', board, width, height, consecutiveToWin)) {
-        return new int(1);
-    } else if (won('2', board, width, height, consecutiveToWin)) {
         return new int(-1);
+    } else if (won('2', board, width, height, consecutiveToWin)) {
+        return new int(1);
     } else {
         int posMoves = 0;
         for (int i = 0; i < width * height; i++) {
@@ -179,7 +179,7 @@ int minimax(char* board, int width, int height, int consecutiveToWin, int depth,
         int bestScore = -100;
         for (int i = 0; i < width * height; i++) {
             if (board[i] == EMPTY_CELL) {
-                board[i] = PLAYER1;
+                board[i] = PLAYER2;
                 int score = minimax(board, width, height, consecutiveToWin,
                                     depth + 1, false);
                 board[i] = EMPTY_CELL;
@@ -191,7 +191,7 @@ int minimax(char* board, int width, int height, int consecutiveToWin, int depth,
         int bestScore = 100;
         for (int i = 0; i < width * height; i++) {
             if (board[i] == EMPTY_CELL) {
-                board[i] = PLAYER2;
+                board[i] = PLAYER1;
                 int score = minimax(board, width, height, consecutiveToWin,
                                     depth + 1, true);
                 board[i] = EMPTY_CELL;
@@ -208,7 +208,7 @@ void solveGame() {
     std::cin >> height >> width >> consecutiveToWin >> activePlayer;
 
     bool isMaximizing = true;
-    if (activePlayer == '2') {
+    if (activePlayer == '1') {
         isMaximizing = false;
     }
 
@@ -217,20 +217,21 @@ void solveGame() {
         std::cin >> board[i];
     }
 
-
-            int score = minimax(board, width, height, consecutiveToWin, 0,
-                                isMaximizing);
-            switch (score) {
-                case 0:
-                    std::cout << "BOTH_PLAYERS_TIE" << std::endl;
-                    break;
-                case 1:
-                    std::cout << "FIRST_PLAYER_WINS" << std::endl;
-                    break;
-                case 2:
-                    std::cout << "SECOND_PLAYER_WINS" << std::endl;
-                    break;
-            }
+    int score =
+        minimax(board, width, height, consecutiveToWin, 0, isMaximizing);
+    switch (score) {
+        case 0:
+            std::cout << "BOTH_PLAYERS_TIE" << std::endl;
+            break;
+        case -1:
+            std::cout << "FIRST_PLAYER_WINS" << std::endl;
+            break;
+        case 1:
+            std::cout << "SECOND_PLAYER_WINS" << std::endl;
+            break;
+        default:
+            std::cerr << "THERE IS NO SUCH SCORE!" << std::endl;
+    }
 
     // for (int i = 0; i < width * height; i++) {
     //     if (board[i] == '0') {
