@@ -1,5 +1,6 @@
 #include "Commands.h"
 
+#include <algorithm>
 #include <iostream>
 
 #define EMPTY_CELL '0'
@@ -75,21 +76,159 @@ bool won(char player, char* board, int width, int height,
     return false;
 }
 
+char getConsecutive(char* arr, int size, int amount, int stepsize) {
+    if (size < amount) {
+        return '0';
+    }
+    char last = '0';
+    int count = 0;
+    for (int i = 0, x = 0; i < size; i++, x += stepsize) {
+        if (arr[x] != last || arr[x] == '0') {
+            last = arr[x];
+            count = 0;
+        }
+        count += 1;
+        if (amount <= count) {
+            return arr[x];
+        }
+    }
+    return '0';
+}
+
+char getWinner(char* board, int width, int height, int consecutiveToWin) {
+    // horizontal
+    // ---
+    // 000
+    // 000
+    for (int y = 0; y < height; y++) {
+        char win =
+            getConsecutive(board + y * width, width, consecutiveToWin, 1);
+        if (win != '0') {
+            return win;
+        }
+    }
+    // vertical
+    // |00
+    // |00
+    // |00
+    for (int x = 0; x < width; x++) {
+        char win = getConsecutive(board + x, height, consecutiveToWin, width);
+        if (win != '0') {
+            return win;
+        }
+    }
+    /* ---\\\backslash diagonals\\\--- */
+    // longest diagonals
+    // \\\00
+    // 0\\\0
+    // 00\\\
+
+    for (int d = 0; d < std::abs(width - height) + 1; d++) {
+        char win = getConsecutive(
+            width > height ? board + d : board + d * width,
+            std::min(width, height), consecutiveToWin, width + 1);
+        if (win != '0') {
+            return win;
+        }
+    }
+    // shorter diagonals
+    // 000\\
+    // \000\
+    // \\000
+    int leftBotAdd = std::abs(width - height);
+    int rightTopAdd = 0;
+    if (width > height) {
+        leftBotAdd = 0;
+        rightTopAdd = std::abs(width - height);
+    }
+    for (int s = 1; s <= (std::min(width, height) - consecutiveToWin); s++) {
+        // left bottom diagonals
+        // 00000
+        // \0000
+        // \\000
+        char win = getConsecutive(board + width * (s + leftBotAdd),
+                                  std::min(width, height) - s, consecutiveToWin,
+                                  width + 1);
+        if (win != '0') {
+            return win;
+        }
+        // right top diagonals
+        // 000\\
+        // 0000\
+        // 00000
+        win =
+            getConsecutive(board + s + rightTopAdd, std::min(width, height) - s,
+                           consecutiveToWin, width + 1);
+        if (win != '0') {
+            return win;
+        }
+    }
+    /* ---///slash diagonals///--- */
+    // longest diagonals
+    // 00///
+    // 0///0
+    // ///00
+    for (int d = 0; d < std::abs(width - height) + 1; d++) {
+        char win = getConsecutive(
+            width > height ? board + width - 1 - d
+                           : board + width - 1 + d * width,
+            std::min(width, height), consecutiveToWin, width - 1);
+        if (win != '0') {
+            return win;
+        }
+    }
+    // shorter diagonals
+    // //000
+    // /000/
+    // 000//
+    int leftTopAdd = 0;
+    int rightBotAdd = std::abs(width - height);
+    if (width > height) {
+        leftTopAdd = std::abs(width - height);
+        rightBotAdd = 0;
+    }
+    for (int s = 1; s <= (std::min(width, height) - consecutiveToWin); s++) {
+        // left top diagonals
+        // //000
+        // /0000
+        // 00000
+        char win = getConsecutive(board + width - 1 - (s + leftTopAdd),
+                                  std::min(width, height) - s, consecutiveToWin,
+                                  width - 1);
+        if (win != '0') {
+            return win;
+        }
+        // right bottom diagonals
+        // 00000
+        // 0000/
+        // 000//
+        win = getConsecutive(board + width - 1 + width * (s + rightBotAdd),
+                             std::min(width, height) - s, consecutiveToWin,
+                             width - 1);
+        if (win != '0') {
+            return win;
+        }
+    }
+    return '0';
+}
+
 int* getScore(char* board, int width, int height, int consecutiveToWin) {
-    if (won('1', board, width, height, consecutiveToWin)) {
-        return new int(-1);
-    } else if (won('2', board, width, height, consecutiveToWin)) {
-        return new int(1);
-    } else {
-        int posMoves = 0;
-        for (int i = 0; i < width * height; i++) {
-            if (board[i] == '0') {
-                posMoves++;
+    char winner = getWinner(board, width, height, consecutiveToWin);
+
+    switch (winner) {
+        case '0':
+            for (int i = 0; i < width * height; i++) {
+                if (board[i] == '0') {
+                    return nullptr;
+                }
             }
-        }
-        if (posMoves == 0) {
             return new int(0);
-        }
+        case '1':
+            return new int(-1);
+        case '2':
+            return new int(1);
+        default:
+            throw "There is no such winner! There is a bug in getWinner()";
     }
     return nullptr;
 }
@@ -240,24 +379,4 @@ void solveGame() {
         default:
             throw "There is no such score! minimax() has a bug";
     }
-
-    // for (int i = 0; i < width * height; i++) {
-    //     if (board[i] == '0') {
-    //         board[i] = activePlayer;
-    //         int score = minimax(board, width, height, consecutiveToWin, 0,
-    //                             isMaximizing);
-    //         switch (score) {
-    //             case 0:
-    //                 std::cout << "BOTH_PLAYERS_TIE" << std::endl;
-    //                 break;
-    //             case 1:
-    //                 std::cout << "FIRST_PLAYER_WINS" << std::endl;
-    //                 break;
-    //             case 2:
-    //                 std::cout << "SECOND_PLAYER_WINS" << std::endl;
-    //                 break;
-    //         }
-    //         board[i] = '0';
-    //     }
-    // }
 }
